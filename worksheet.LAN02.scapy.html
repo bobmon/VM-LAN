@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Scapy Worksheet</title>
+<meta name="author" content="RAMontante"/>
+<meta name="date" content="2016-10-28"/>
+<base href="https://montcs.bloomu.edu" />
+<style type="text/css">
+@import url("/css/generic.css");
+@import url("/css/pagefmt.css");
+@import url("/css/w3cvalid.css");
+
+.user {
+    font-family:"Gosmick Sans", "Comic Sans MS","Papyrus","Purisa","URW Chancery L",fantasy;
+    color:#608;
+}
+comment,
+em.smaller{font-weight:normal;color:#050}
+
+body {
+    font-size:12pt;
+    width:8.5in;
+    margin:0;
+    padding:0.25in;
+}
+
+h3 { margin-bottom:1ex; margin-top:4ex;padding-top:0.5ex;border-top: 1px solid #ddd; }
+
+h4 { margin-bottom:1ex; }
+
+ol { margin-top:1ex; }
+ol li { margin-top:0ex; margin-bottom:1ex; padding:0;border-top:1px dotted #999;}
+
+.code,
+code {
+    padding-left:2px;padding-right:2px;margin-bottom:1.5ex;
+    color:#600;background:#e0e0e0;border:1px dotted #666;
+    font-size:110%;
+}
+div.code {width:25em;page-break-inside:avoid;}
+
+code img {background:#fff;color:#000}
+  
+pre {background:#e0e0e0}
+
+ul.python {
+    margin-left:3em;
+    margin-top:0.5ex;
+    list-style:outside '>>> ';
+}
+ul.code li,
+ul.python li {
+    border:none;
+    padding-top:0.2ex;
+    padding-bottom:0.0ex;
+    margin-bottom:0.5ex;
+}
+
+ul.compact {
+    list-style: inside square;
+}
+
+div#title {
+    float:left;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border:1px solid red;
+}
+div#title p {
+    width: 3.45in;
+    margin: 0ex 0em 0ex 2em;
+    text-indent: -2em;
+    padding: 0;
+}
+
+div#SigBlock {
+    float:left;
+    width:3in;height:0.75in;
+    vertical-align:top;
+    border:1px solid #000;padding:1em;
+}
+
+.answerline {
+    display:inline-block;
+    width:1in;
+    border-bottom:1px solid #000;
+}
+
+</style>
+<script type="text/javascript" src="/js/utilities.js"></script>
+
+</head><body class="">
+
+<div id="content">
+<div id="title">
+  <p class="">Networking</p>
+  <p>Scapy Worksheet</p>
+</div><!-- title -->
+<div id="SigBlock" class="HIDE"><span class="">Name:</span></div>
+<!-- ==================================================================== -->
+
+<h1>Craft Ethernet frames using "scapy" in Python</h1>
+<img class="" src="Ethernet-headers.png" width="50%" alt="Ethernet headers" />
+<p>
+In this worksheet you will set up the "scapy" package, which provides Python tools.
+Then you'll use it to "craft" (create by hand) and send Ethernet frames.
+</p><p>
+This provides the ability to create LAN frames with specific characteristics, such as 
+</p>
+
+<hr/>
+
+<h2>Prepare for trying scapy</h2>
+<ol><li>
+    Start your Windows VM.
+</li><li>
+    Find the MAC address for your Windows VM by doing these steps:
+    <ol class="compact"><li>
+        Start a command prompt on your Windows VM.
+    </li><li>
+        Run the command <code>ipconfig/all</code>.
+    </li><li>
+        Find the line that looks like <strong>"<tt>Physical&nbsp;Address&nbsp;.&nbsp;.&nbsp;.&nbsp;.&nbsp;:&nbsp;08-00-27-58-78-29</tt></strong>".
+        The last part will be different, and is your Windows MAC address.
+        <p>
+        Windows shows MAC addresses as six hexadecimal numbers, separated by dashes (-).
+        However, most software writes MAC addresses with colons (:) instead of dashes.
+        <br/>
+        Remember the MAC address, you'll need it in a moment.
+        </p>
+    </li><li>
+        Find the line that looks like <strong>"<tt>IPv4&nbsp;Address&nbsp;.&nbsp;.&nbsp;.&nbsp;.&nbsp;:&nbsp;10.0.2.4</tt></strong>".
+        The last number may be different, and is your Windows IP address.
+        <p>
+        Remember the IP address, you'll also need it.
+        </p>
+    </li></ol>
+
+</li><li>
+    From your Linux terminal, run the command <code>sudo wireshark</code>.
+    <ol class="compact"><li>
+        Select the "eth0" interface.
+    </li><li>
+        Click on "Start".
+    </li></ol>
+
+</li></ol>
+
+<hr/>
+
+<h2>Use scapy to craft and send some frames</h2>
+<ol><li class="HIDE">
+    <p>
+    From your Linux terminal, run the command <code>sudo python</code>.
+    Then enter this command at the python prompt:
+    </p>
+    <ul class="python code"><li>
+        from scapy.all import *
+    </li></ul>
+    <p class="smaller">
+    (<em>note</em>: You can combine these steps by using the command <code>sudo scapy</code>, and also get color coding.  Either way will work.)
+    </p>
+    <p>&nbsp;</p>
+
+</li><li class="">
+    From your Linux terminal, run Python in "scapy mode" by entering this command: <code>sudo scapy</code>.
+    It will prompt you for Python commands by showing the prompt "<tt>&gt;&gt;&gt;</tt>".
+</li><li>
+    You will target your Windows VM, using its MAC address that you found earlier.
+    <em>Remember to use colons (:) instead of dashes (-), for example "<tt>08:00:27:58:78:29</tt>"</em>.
+    <p>
+    Enter your Windows VM's MAC address, but using colons (:), with this command at the python prompt:
+    </p>
+    <ul class="python code"><li>
+        winMAC&nbsp;=&nbsp;'<span class="user">08:00:27:58:78:29</span>'&nbsp;&nbsp;</code><em class="smaller"># replace with your Windows VM's MAC address</em>
+    </li></ul>
+    <p>
+    Then enter these commands at the python prompts, one at a time:
+    </p>
+    <ul class="python code"><li>
+        lltdType&nbsp;=&nbsp;0x88d9
+    </li><li>
+        frame1&nbsp;=&nbsp;Ether(dst=winMAC,&nbsp;type=lltdType)
+    </li><li>
+        frame1.show()&nbsp;&nbsp;<em class="smaller">#&nbsp;inspect&nbsp;your&nbsp;newly&nbsp;created frame</em>
+        <br/>
+    </li><li>
+        sendp(frame1,&nbsp;iface='eth0')
+    </li></ul>
+    <p>&nbsp;</p>
+
+</li><li>
+    Look at your Wireshark display (in the Linux VM).
+    Put in a display filter: 
+    <br/>
+    <strong><tt>eth.type==0x88d9</tt></strong>
+    <br/>
+    (This is the Ethernet type for Microsoft's LLTD protocol.)
+    You should see an Ethernet frame, identified as carrying protocol <tt>0x88d9</tt>.
+
+</li><li>
+    Examine the Ethernet headers, and the overall frame length.
+    <p>
+    How long is this frame?
+    How does that compare to the length of the Ethernet headers?
+    </p>
+    <p>
+    Is there any payload?
+    </p>
+    <p>
+    Is this a <em>legal</em> Ethernet frame?
+    </p>
+    <p>&nbsp;</p>
+</li></ul>
+
+<h3>Another malformed frame</h3><!-- IEEE 802.3 -->
+<ol><li class="">
+    <p>
+    Enter these commands at the python prompts, one at a time:
+    </p>
+    <ul class="python code"><li>
+        bcMAC&nbsp;=&nbsp;'ff:ff:ff:ff:ff:ff'&nbsp;&nbsp;<em class="smaller">#&nbsp;MAC&nbsp&nbsp;broadcast&nbsp;address</em>
+    </li><li>
+        shortType&nbsp;=&nbsp;32
+    </li><li>
+        frame2&nbsp;=&nbsp;Ether(dst=winMAC,&nbsp;src=bcMAC,&nbsp;type=shortType)
+        <br/>
+    </li><li>
+        sendp(frame2,&nbsp;iface='eth0')
+    </li></ul>
+    <p>&nbsp;</p>
+
+</li><li>
+    Look at your Wireshark display (in the Linux VM).
+    You should see another Ethernet frame, this one identified as having a length of <tt>32</tt>.
+    What kind of Ethernet is this?
+    <p>
+    Expand the Length field (click the arrowhead on the left).
+    Is this a <em>legal</em> length for an Ethernet frame?
+    </p>
+    <p>
+    What is the source MAC address of the frame?
+    Is this a <em>reasonable</em> source address?
+    </p>
+    <p>&nbsp;</p>
+</li></ul>
+
+<h3>ARP frame</h3><!-- ARP -->
+
+Craft an ARP lookup frame.
+You will target your Windows VM, using its IP address that you found earlier.
+<ul><li>
+    Enter these commands at the python prompts:
+    <ul class="python code"><li>
+        spoofed&nbsp;=&nbsp;'00:00:01:00:00:01'&nbsp;&nbsp;<em class="smaller">#&nbsp;spoofed&nbsp;MAC&nbsp;address</em>
+    </li><li>
+        arpType&nbsp;=&nbsp;0x0806&nbsp;&nbsp;<em class="smaller">#&nbsp;ARP-type&nbsp;payload</em>
+    </li><li>
+        eth&nbsp;=&nbsp;Ether(dst=bcMAC,&nbsp;src=spoofed,&nbsp;type=arpType)
+        <br/>
+
+    </li><li>
+        vectorIP&nbsp;=&nbsp;'<span class="user">10.0.2.4</span>'&nbsp;&nbsp;<em class="smaller">#&nbsp;replace&nbsp;with&nbsp;your&nbsp;Windows&nbsp;VM's&nbsp;IP&nbsp;address</em>
+    </li><li>
+        victimIP&nbsp;=&nbsp;'<span class="user">10.0.2.254</span>'&nbsp;&nbsp;<em class="smaller">#&nbsp;spoofed&nbsp;victim's&nbsp;IP&nbsp;address</em>
+    </li><li>
+        payload&nbsp;=&nbsp;ARP(op=0x0001,&nbsp;psrc=victimIP,&nbsp;pdst=vectorIP)
+    </li><li>
+        frame3&nbsp;=&nbsp;eth/payload
+    </li><li>
+        pad&nbsp;=&nbsp;Padding()
+    </li><li>
+        pad.load&nbsp;=&nbsp;'\x00'&nbsp;*&nbsp;(60&nbsp;-&nbsp;len(frame3))
+    </li><li>
+        fullframe&nbsp;=&nbsp;frame3/pad
+    </li><li>
+        fullframe.show()&nbsp;&nbsp;<em class="smaller">#&nbsp;inspect&nbsp;your&nbsp;new&nbsp;frame</em>
+    </li></ul>
+        You'll use this fullframe in a moment.
+
+</li><li>
+    Stop the Wireshark capture.
+    <p>
+    Replace the display filter with a simple one:
+    <br/>
+    <strong><tt>arp</tt></strong>.
+    </p><p>
+    Restart the Wireshark capture.
+    </p>
+
+</li><li>
+    Enter this command at the python prompt:
+    <ul class="python code"><li>
+        sendp(fullframe,&nbsp;iface='eth0')
+    </li></ul>
+
+</li><li>
+    Look at your Wireshark display (in the Linux VM).
+    You should see an ARP "who-has" packet.
+    <p>
+    How long is this frame?
+    </p><p>
+    Where does this frame appear to come from?
+    What MAC address, what IP address?
+    </p><p>
+    Did you see a reply (an ARP "is-at" frame)?
+    Who was it sent to?
+    </p>
+    <p>&nbsp;</p>
+</li></ul>
+
+<h3>Ping frame</h3><!-- Ping -->
+
+Roll your own Ping request.
+You will target your Windows VM, using its MAC and IP addresses.
+
+<ul><li>
+    Enter these commands at the python prompts:
+    <ul class="python code"><li>
+        linuxMAC&nbsp;=&nbsp;'08:00:27:23:9a:2f'&nbsp;&nbsp;<em class="smaller"># replace w/ Linux VM's MAC address</em>
+    </li><li>
+        ipType = 0x0800&nbsp;&nbsp;<em class="smaller"># IP-type payload</em>
+    </li><li>
+        eth&nbsp;=&nbsp;Ether(dst=winMAC, src=linuxMAC, type=ipType)
+
+    </li><li>
+        srcIP&nbsp;=&nbsp;'<span class="user">10.0.2.3</span>'&nbsp;&nbsp;<em class="smaller"># replace w/ Linux VM's IP address</em>
+    </li><li>
+        ip&nbsp;=&nbsp;IP(dst=vectorIP, src=srcIP, proto='icmp')
+
+    </li><li>
+        icmp&nbsp;=&nbsp;ICMP(type='echo-request', code=0)
+
+    </li><li>
+        frame4&nbsp;=&nbsp;eth/ip/icmp
+    </li><li>
+        pad = Padding()
+    </li><li>
+        pad.load&nbsp;=&nbsp;'\x00&nbsp;Secret!&nbsp;\x00'
+    </li><li>
+        pad.load&nbsp;+=&nbsp;'\x00'&nbsp;*&nbsp;(60&nbsp;-&nbsp;len(frame4)&nbsp;-&nbsp;len(pad.load))
+    </li><li>
+        fullframe = frame4/pad
+    </li></ul>
+        You'll use this fullframe in a moment.
+</li><li>
+    Stop the Wireshark capture.
+    <p>
+    Replace the display filter with a simple one:
+    <br/>
+    <strong><tt>icmp</tt></strong>.
+    </p><p>
+    Restart the Wireshark capture.
+    </p>
+
+</li><li>
+    Enter this command at the python prompt:
+    <ul class="python code"><li>
+        sendp(fullframe, iface='eth0')
+    </li></ul>
+
+</li><li>
+    Look at your Wireshark display (in the Linux VM).
+    You should see a pair of ping (ICMP) packets.
+    <p>
+    What protocols are present in the frame you sent?
+    How do they compare to the protocols in the reply?
+    </p>
+
+</li><li>
+    Can you find your Secret! message?
+    <p>
+    Can Wireshark identify the message in its middle Analysis pane?
+    Is the message visible in the lower hexdump pane?
+    </p>
+    <p>&nbsp;</p>
+
+</li><li>
+    Close down python/scapy by entering <code>exit()</code>.
+    Also close the Wireshark window.
+</li></ol>
+
+<hr/>
+
+<h3>
+Congratulations!  You've crafted some Ethernet frames and sent them out.
+</h3>
+Shut down both VMs.
+You're done with this lab.
+
+</div><!-- content -->
+<script type="text/javascript">ts_validate();</script>
+</body></html>

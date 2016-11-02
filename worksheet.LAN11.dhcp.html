@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>DHCP Worksheet</title>
+<meta name="author" content="RAMontante"/>
+<meta name="date" content="2016-10-26"/>
+<base href="https://montcs.bloomu.edu" />
+<style type="text/css">
+@import url("/css/generic.css");
+@import url("/css/pagefmt.css");
+@import url("/css/w3cvalid.css");
+
+body {
+    font-size:12pt;
+    width:8.5in;
+    margin:0;
+    padding:0.50in;
+}
+
+h3 { margin-bottom:1ex; margin-top:4ex;padding-top:0.5ex;border-top: 1px solid #ddd; }
+
+h4 { margin-bottom:1ex; }
+
+strong.em {color:#00a;font-size:105%;}
+
+.code,
+code {
+    padding-left:2px;padding-right:2px;margin-bottom:1.5ex;
+    color:#600;background:#f7f7f7;border:1px dotted #666;
+}
+div.code {width:25em;page-break-inside:avoid;}
+
+code img {background:#fff;color:#000}
+
+ul.compact {
+    /* list-style: inside url(python-cursor.png); */
+    list-style: inside square;
+}
+
+div#title {
+    float:left;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border:1px solid red;
+}
+div#title p {
+    width: 3.45in;
+    margin: 0ex 0em 0ex 2em;
+    text-indent: -2em;
+    padding: 0;
+}
+
+div#SigBlock {
+    float:left;
+    width:3in;height:0.75in;
+    vertical-align:top;
+    border:1px solid #000;padding:1em;
+}
+
+.prompt,
+pre { background:#e0e0e0; }
+
+.answerline {
+    display:inline-block;
+    width:1in;
+    height:0.30in;
+    border:1px solid #ddd;
+    border-bottom:1px solid #000;
+    vertical-align:bottom;
+}
+
+/*
+.fake::before {content: "_"}
+.fake::after {content: "_"}
+*/
+
+table.referencetable {
+    float:left;
+    margin-left:2em;
+    border-collapse:collapse;
+    border:2px solid #00f;
+}
+table.referencetable thead {
+    border-bottom:2px solid #00f;
+}
+table.referencetable tbody {
+    font-family:monospace;
+}
+table.referencetable tr {
+    border: 1px solid #000;
+}
+table.referencetable th {
+    border-left: 2px solid #00f;
+}
+table.referencetable td {
+    text-align:right;
+    border: 1px dotted #000;
+}
+table.referencetable .gray {
+    color:#999;
+}
+table.referencetable .red {
+    color:#a00;
+}
+
+/*
+pre.prompt::before {
+    content:"vyos# ";
+    color:#0000d7;
+    font-weight:bold;
+}
+pre.prompt2::before {
+    content:":~$ ";
+    color:#0000d7;
+    font-weight:bold;
+}
+*/
+
+</style>
+<script type="text/javascript" src="/js/utilities.js"></script>
+</head><body class="" >
+
+<div id="content">
+<div id="title">
+  <p class="">Networking</p>
+  <p>DHCP Worksheet</p>
+</div><!-- title -->
+<div id="SigBlock" class="HIDE"><span class="">Name:</span></div>
+<!-- ==================================================================== -->
+<h1 class="clearboth">Use DHCP In Your LAN</h1>
+In this worksheet you will work out a subnet mask for your private network, and reconfigure your private network to get IP addresses by DHCP.
+
+<hr/>
+
+<h2>Work out a subnet and subnet mask for your private LAN.</h2>
+<p>
+Start with the network 192.168.<strong class="em">x</strong>.0/24 (replace the value "<strong class="em">x</strong>" with the last part of your physical host's IP address).
+You will create a subnet that can hold 10 hosts.
+</p><p>
+There are reference tables at the end of this section, showing binary patterns.
+These may help in answering the following questions.
+</p>
+<ol><li>
+How many <em>available</em> host bits do you have to work with in the 192.168.<strong class="em">x</strong>.0/24 network?
+(Don't overthink this, it's easy.)
+<span class="answerline">&nbsp;</span>
+</li><li>
+How many host bits do you need, to count at least 10 hosts?
+<span class="answerline">&nbsp;</span>
+These are your subnet's host-ID bits.
+These will be the rightmost of your <em>available</em> host bits.
+</li><li>
+How many of the <em>available</em> host bits are left over, to count subnets?
+<span class="answerline">&nbsp;</span>
+These are your subnet-ID bits.
+How many subnets does this give?
+<span class="answerline">&nbsp;</span>
+</li><li>
+The original netmask has 24 "1" bits in it.
+The new subnet mask adds the subnet-ID bits to the original netmask.
+How many total bits is this?
+<span class="answerline">&nbsp;</span>
+Use this below, when it asks for <span class="fake">CIDR-bits</span>.
+</li><li>
+Write this new subnet mask out in binary:
+<span class="answerline">&nbsp;</span>
+</li><li>
+Write the subnet mask again, in dotted-decimal form.
+<span class="answerline">&nbsp;</span>
+<p>&nbsp;</p>
+
+</li><li>
+You must use the fourth subnet &mdash; subnet-ID 3.
+Write this subnet-ID in binary, using as many bits as you have subnet-ID bits.
+<span class="answerline">&nbsp;</span>
+</li><li>
+Pad the subnet-ID on the right with 0's for the host-ID bits, and write the result in dotted-decimal form.
+<span class="answerline">&nbsp;</span>
+Add this to the 192.168.<strong class="em">x</strong> network ID, and use it below when it asks for <span class="fake">subnet-ID</span>.
+</li><li>
+Your VyOS router VM will have host-ID <em>1</em>.
+Write the subnet-ID bits for <em>3</em> followed by the host-ID bits for <em>1</em>, to make the binary form of the original <em>available</em> host bits.
+<span class="answerline">&nbsp;</span>
+<br/>
+Then write this number in decimal form:
+<span class="answerline">&nbsp;</span>
+</li><li>
+Combine the original network ID, 192.168.<strong class="em">x</strong>, with the <em>available</em> host bits you just calculated, to form your <span class="fake">router's-IP-address</span>:
+<span class="answerline">&nbsp;</span>
+</li><li>
+Your <span class="fake">first-client-address</span> has host-ID <em>4</em>.
+Write the subnet-ID bits for <em>3</em> followed by the host-ID bits for <em>2</em>, to make the binary form of the original <em>available</em> host bits.
+<span class="answerline">&nbsp;</span>
+<br/>
+Then write this number in decimal form:
+<span class="answerline">&nbsp;</span>
+</li><li>
+Your <span class="fake">last-client-address</span> has host-ID one less than the biggest number that fits in your host-ID bits.
+Write the subnet-ID bits for <em>3</em> followed by the host-ID bits for this host-ID, to make the binary form of the original <em>available</em> host bits.
+<span class="answerline">&nbsp;</span>
+<br/>
+Then write this number in decimal form:
+<span class="answerline">&nbsp;</span>
+</li></ol>
+Whew!
+
+<h3>Reference tables</h3>
+
+<table class="referencetable"><thead>
+<tr><th>Power<br/>of 2</th><th>Value</th></tr>
+</thead><tbody>
+<tr><td class="gray">2<sup class="red">0</sup> </td><td>&thinsp;    1</td></tr>
+<tr><td class="gray">2<sup class="red">1</sup> </td><td>&thinsp;    2</td></tr>
+<tr><td class="gray">2<sup class="red">2</sup> </td><td>&thinsp;    4</td></tr>
+<tr><td class="gray">2<sup class="red">3</sup> </td><td>&thinsp;    8</td></tr>
+<tr><td class="gray">2<sup class="red">4</sup> </td><td>&thinsp;   16</td></tr>
+<tr><td class="gray">2<sup class="red">5</sup> </td><td>&thinsp;   32</td></tr>
+<tr><td class="gray">2<sup class="red">6</sup> </td><td>&thinsp;   64</td></tr>
+<tr><td class="gray">2<sup class="red">7</sup> </td><td>&thinsp;  128</td></tr>
+<tr><td class="gray">2<sup class="red">8</sup> </td><td>&thinsp;  256</td></tr>
+<tr><td class="gray">2<sup class="red">9</sup> </td><td>&thinsp;  512</td></tr>
+<tr><td class="gray">2<sup class="red">10</sup></td><td>&thinsp; 1024</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">11</sup></td><td>&thinsp; 2048</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">12</sup></td><td>&thinsp; 4096</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">13</sup></td><td>&thinsp; 8192</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">14</sup></td><td>&thinsp;16384</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">15</sup></td><td>&thinsp;32768</td></tr>
+<tr class="HIDE"><td class="gray">2<sup class="red">16</sup></td><td>&thinsp;65536</td></tr>
+</tbody></table>
+
+<table class="referencetable smaller"><thead>
+<tr>
+    <th>Bit<br/>Pattern</th><th>Hexa-<br/>dec-<br/>imal</th><th>Dec-<br/>imal</th>
+    <th>Bit<br/>Pattern</th><th>Hexa-<br/>dec-<br/>imal</th><th>Dec-<br/>imal</th>
+</tr>
+</thead><tbody>
+<tr> <th> 0000 </th><td> 0</td><td> 0</td> <th> 1000 </th><td> 8</td><td> 8</td> </tr>
+<tr> <th> 0001 </th><td> 1</td><td> 1</td> <th> 1001 </th><td> 9</td><td> 9</td> </tr>
+<tr> <th> 0010 </th><td> 2</td><td> 2</td> <th> 1010 </th><td> a</td><td>10</td> </tr>
+<tr> <th> 0011 </th><td> 3</td><td> 3</td> <th> 1011 </th><td> b</td><td>11</td> </tr>
+<tr> <th> 0100 </th><td> 4</td><td> 4</td> <th> 1100 </th><td> c</td><td>12</td> </tr>
+<tr> <th> 0101 </th><td> 5</td><td> 5</td> <th> 1101 </th><td> d</td><td>13</td> </tr>
+<tr> <th> 0110 </th><td> 6</td><td> 6</td> <th> 1110 </th><td> e</td><td>14</td> </tr>
+<tr> <th> 0111 </th><td> 7</td><td> 7</td> <th> 1111 </th><td> f</td><td>15</td> </tr>
+</tbody></table>
+
+<table class="referencetable smaller"><thead>
+<tr><th>bit<br/>pos'n</th><th>Bit Pattern</th><th>Value</th></tr>
+</thead><tbody>
+<tr><td>7</td><th> 1000<span style="font-size:35%">&thinsp;</span>0000 </th><td> 128</td></tr>
+<tr><td>6</td><th> 0100<span style="font-size:35%">&thinsp;</span>0000 </th><td> 64</td></tr>
+<tr><td>5</td><th> 0010<span style="font-size:35%">&thinsp;</span>0000 </th><td> 32</td></tr>
+<tr><td>4</td><th> 0001<span style="font-size:35%">&thinsp;</span>0000 </th><td> 16</td></tr>
+<tr><td>3</td><th> 0000<span style="font-size:35%">&thinsp;</span>1000 </th><td> 8</td></tr>
+<tr><td>2</td><th> 0000<span style="font-size:35%">&thinsp;</span>0100 </th><td> 4</td></tr>
+<tr><td>1</td><th> 0000<span style="font-size:35%">&thinsp;</span>0010 </th><td> 2</td></tr>
+<tr><td>0</td><th> 0000<span style="font-size:35%">&thinsp;</span>0001 </th><td> 1</td></tr>
+</tbody></table>
+
+<table class="referencetable"><thead>
+<tr><th># of<br/>bits</th><th>Bit Pattern</th><th>Value</th></tr>
+</thead><tbody>
+<tr><td>0</td><th> 0000<span style="font-size:35%">&thinsp;</span>0000 </th><td> 0</td></tr>
+<tr><td>1</td><th> 1000<span style="font-size:35%">&thinsp;</span>0000 </th><td> 128</td></tr>
+<tr><td>2</td><th> 1100<span style="font-size:35%">&thinsp;</span>0000 </th><td> 192</td></tr>
+<tr><td>3</td><th> 1110<span style="font-size:35%">&thinsp;</span>0000 </th><td> 224</td></tr>
+<tr><td>4</td><th> 1111<span style="font-size:35%">&thinsp;</span>0000 </th><td> 240</td></tr>
+<tr><td>5</td><th> 1111<span style="font-size:35%">&thinsp;</span>1000 </th><td> 248</td></tr>
+<tr><td>6</td><th> 1111<span style="font-size:35%">&thinsp;</span>1100 </th><td> 252</td></tr>
+<tr><td>7</td><th> 1111<span style="font-size:35%">&thinsp;</span>1110 </th><td> 254</td></tr>
+<tr><td>8</td><th> 1111<span style="font-size:35%">&thinsp;</span>1111 </th><td> 255</td></tr>
+</tbody></table>
+
+<hr/>
+
+<h2>Add a DHCP server to your router.</h2>
+<p>
+In the above exercise, you calculated your private LAN's subnet ID, your router's IP address, and the starting and ending IP addresses for the clients &mdash; the range of DHCP addresses.
+Use these values for the following steps.
+</p>
+<p>
+Start your VyOS VM and login to the router, using account "vyos" and password "vyos".
+<br/>
+Enter these commands (for more information, see <a href="http://vyos.net/wiki/User_Guide">http://vyos.net/wiki/User_Guide</a>):
+</p>
+<ul><li>
+    Start the configuration:
+<pre class="prompt2 boxed">
+configure
+</pre>
+</li><li>
+    Configure a DHCP server to hand out IP addresses automatically.
+    In the following, you can skip comment lines that begin with a "#".
+<pre class="prompt boxed">
+<object data="/VM-LAN/gateway-dhcp-11.html" style="font-size:10pt;width:100%;height:40ex">
+<div id="alt-dhcp">
+set service dhcp-server disabled 'false'
+
+set service dhcp-server shared-network-name LAN subnet <span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>  default-router '<span class="fake">router's-IP-address</span>'
+set service dhcp-server shared-network-name LAN subnet <span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>  dns-server '<span class="fake">router's-IP-address</span>'
+set service dhcp-server shared-network-name LAN subnet <span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>  domain-name 'INSIDE'
+set service dhcp-server shared-network-name LAN subnet <span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>  lease '86400'
+
+set service dhcp-server shared-network-name LAN subnet <span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>  start '<span class="fake">first-client-address</span>'  stop '<span class="fake">last-client-address</span>'
+</div>
+</object>
+</pre>
+    <p>
+    Check your work with the command:
+    </p>
+<pre class="prompt boxed">
+show service
+</pre>
+    If it doesn't look right, <span class="prompt boxed">del</span> the incorrect lines, and re-enter them correctly.
+    <p>&nbsp;</p>
+</li><li>
+    Apply the configuration:
+<pre class="prompt boxed">
+commit
+</pre>
+</li><li>
+    Save the configuration for future reboots:
+<pre class="prompt boxed">
+save
+</pre>
+</li><li>
+    ... and quit:
+<pre class="prompt boxed">
+exit
+</pre>
+</li></ul>
+
+<hr/>
+
+<h2>Configure Windows VM for DHCP</h2>
+<ul><li>
+    Start your Windows VM.
+    Login to Windows, using account "joe" and password "joe".
+</li><li>
+    Select "Start-Button -&gt; Control Panel -&gt; Network and Internet".
+    <p>
+    Click on "View network status and tasks" under "Network and Sharing Center".
+    </p><p>
+    Click on "Change adapter settings" on the left.
+    </p>
+</li><li>
+    Right-click the Local Area Connection network.
+    Choose "Properties".
+</li><li>
+    Find and select the line "Internet Protocol Version 4 (TCP/IPv4)".
+    Then click on the Properties button.
+</li><li>
+    Check the box "Obtain an IP address automatically".
+    <p>
+    Check the box "Obtain DNS server address automatically".
+    </p>
+    <p>
+    Click on "OK", then "Close".
+    </p>
+</li></ul>
+
+<hr/>
+
+<h2>Configure Linux VM for DHCP</h2>
+Start your Linux VM.
+Login, using account "joe" and password "joe".
+Use the appropriate GUI tool, depending on what Linux distribution you installed.
+
+<h3>Ubuntu</h3>
+<ul><li>
+    Click on the Start button in the lower left corner.
+    <p>
+    Choose "Preferences", then choose "Network Connections".
+    </p>
+</li><li>
+    Choose "Manual wired connection" (or maybe "auto Ethernet"), then click on "Edit"
+</li><li>
+    Choose the "IPv4 Settings" tab.
+</li><li>
+    Set the Method to "Automatic (DHCP)".
+</li><li>
+    Click on the "Save..." button, then the "Close" button in the Network Connections window.
+</li></ul>
+
+<h3>Fedora</h3>
+<ul><li>
+    Click on "Activities" in the upper left.
+    Then choose the Applications icon at the bottom.
+    <p>
+    Choose "Settings".
+    </p>
+</li><li>
+    Choose "Network".
+    <p>
+    Click on the "Settings" icon in the lower right corner.
+    </p>
+</li><li>
+    Choose the "IPv4" item on the left.
+    <p>
+    On the right, set IPv4 to "ON", set Addresses to "Automatic (DHCP)", set DNS to "ON", and set Routes to "ON".
+    </p>
+</li><li>
+    Click on "Apply", then close the Network window.
+</li></ul>
+
+<hr/>
+
+<h2>Test DHCP</h2>
+<ul><li>
+    Restart all three VMs --- router, Linux VM, Windows VM.
+</li><li>
+    Inspect the IP address on each VM.
+    Do they make sense compared to the "start" and "stop" values set for the dhcp-server service on the router?
+</li><li>
+    Ping each of your VMs from another one, using its given IP address.
+    You should be able to reach each VM.
+</li><li>
+    Try pinging one of the VMs on your neighbor's physical host.  You should be able to ping other people in the class, including the instructor.
+</li></ul>
+
+<h4>
+Congratulations!  You've set up DHCP on your LAN.
+</h4>
+
+</div><!-- content -->
+<script type="text/javascript">ts_validate();</script>
+</body></html>

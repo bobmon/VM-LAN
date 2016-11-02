@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Networking Worksheet</title>
+<meta name="author" content="RAMontante"/>
+<meta name="date" content="2015-07-13"/>
+<style type="text/css">
+@import url("/css/generic.css");
+@import url("/css/pagefmt.css");
+@import url("/css/w3cvalid.css");
+
+body {
+    font-size:12pt;
+    width:8.5in;
+    margin:0;
+    padding:0.50in;
+}
+
+h3 { margin-bottom:1ex; margin-top:4ex;padding-top:0.5ex;border-top: 1px solid #ddd; }
+
+h4 { margin-bottom:1ex; }
+
+ol { margin-top:1ex; }
+ol li { margin-top:0ex; margin-bottom:1ex; padding:0;border-top:1px dotted #999;}
+
+.code,
+code {
+    padding-left:2px;padding-right:2px;margin-bottom:1.5ex;
+    color:#600;background:#e0e0e0;border:1px dotted #666;
+}
+div.code {width:25em;page-break-inside:avoid;}
+
+code img {background:#fff;color:#000}
+
+pre {background:#e0e0e0}
+
+ul.compact {
+    /* list-style: inside url(python-cursor.png); */
+    list-style: inside square;
+}
+
+div#title {
+    float:left;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border:1px solid red;
+}
+div#title p {
+    width: 3.45in;
+    margin: 0ex 0em 0ex 2em;
+    text-indent: -2em;
+    padding: 0;
+}
+
+div#SigBlock {
+    float:left;
+    width:3in;height:0.75in;
+    vertical-align:top;
+    border:1px solid #000;padding:1em;
+}
+
+.answerline {
+    display:inline-block;
+    width:1in;
+    border-bottom:1px solid #000;
+}
+
+</style>
+<script type="text/javascript" src="/js/utilities.js"></script>
+
+</head><body class="" >
+
+<div id="content">
+<div id="title">
+  <p class="">Networking</p>
+  <p>Private-LAN-setup Worksheet</p>
+</div><!-- title -->
+<div id="SigBlock" class="HIDE"><span class="">Name:</span></div>
+<!-- ==================================================================== -->
+
+<h1>Configure Your Own LAN Segment</h1>
+<img class="floatright" src="VM-network.1.svg" width="35%" alt="two VMs" />
+In this worksheet you will reconfigure your Virtual Machines to form a private Local Area Network.
+
+<p>
+You have added your VMs as private nodes on your physical host.
+Now you'll move them to your own Local Area Network (LAN) segment, which will be named "intnet".
+</p>
+
+<h2>Change Network Adapters</h2>
+Do this for <em>both</em> your Windows VM and your Linux VM.
+
+<ul><li>
+    Select one of your VMs in the VM manager, and click on the "Settings" icon.
+</li><li>
+    Choose the "Network" item in the dialog box.
+</li><li>
+    You should see a tab labeled "Adapter 1" that is enabled, and attached to "NATNetwork".
+    <p>
+    Click on the drop-down box for this and select "Internal Network" instead.
+    The network's name should come up as "intnet".
+    </p>
+</li><li>
+    Click on "OK".
+</li><li>
+    Repeat these steps for your other VM.
+</li></ul>
+
+<h2>Windows VM</h2>
+<ul><li>
+    Click on "Start".
+    Login to Windows, using account "user" and password "user".
+</li><li>
+    Click on "Start -&gt; All Programs -&gt; Accessories".
+    <p>
+    Right-click on "Command line" and choose "Run as Administrator".
+    </p><p>
+    Run the command <code>ipconfig</code>.  What is the IP address?
+    </p><p>
+    (Does it start out 169.254... ?
+    IP addresses that start out this way are so-called APIPA addresses; Windows chooses one arbitrarily when it has no other way of getting an IP address.)
+    </p><p>
+    If you run the command <code>ping 4.2.2.2</code> now, you will get an "unreachable" result because you're not connected to the Internet.
+    </p>
+</li><li>
+    Select "Start-Button -&gt; Control Panel -&gt; Network and Internet".
+    <p>
+    Click on "View network status and tasks" under "Network and Sharing Center".
+    </p><p>
+    Click on "Change adapter settings" on the left.
+    </p>
+</li><li>
+    Right-click the Local Area Connection network.
+    Choose "Properties".
+</li><li>
+    Find and select the line "Internet Protocol Version 4 (TCP/IPv4)".
+    Then click on the Properties button.
+    <img src="LAC-properties.png" alt="Local Area Connection dialog" />
+</li><li>
+    Fill in the blanks in the Properties dialog, as shown below.
+    <strong>In the following figure, replace the value "100" in each line with the last part of your physical host's IP address, e.g. 106, 119 or a similar number.</strong>
+    The IP address is 192.168.<span class="fancyfont">100</span>.2
+    (For example, the instructor's Windows VM will be at 192.168.<strong class="em">119</strong>.2);
+    <br/>
+    The subnet mask is 255.255.255.0;
+    <br/> the Default gate and preferred DNS server are both 192.168.<span class="fancyfont">100</span>.1;
+    <br/>
+    Fill in the Alternate DNS server as 148.137.11.15 or leave it blank.
+    <img src="IPv4-properties.png" alt="IPv4 dialog" />
+    Check the box "Use the following IP address:".
+    Fill in the IP address, subnet mask, Default gateway, and preferred DNS server, as shown in the figure.
+    <p>
+    Click on "OK", then "Close".
+    </p>
+</li><li>
+    Select "Start-Button -&gt; Control Panel -&gt; System and Security".
+    <p>
+    Choose "Windows Firewall".
+    </p><p class="HIDE">
+    Choose "Turn Windows Firewall on or off".
+    </p><p class="HIDE">
+    Turn <em>off</em> Windows Firewall for both private and public settings.
+    This will let "pings" get through.
+    </p><p class="">
+    Choose "Allow a program or feature through Windows Firewall".
+    </p><p class="">
+     Check on "File and Printer Sharing".
+    This should let "pings" get through.
+    </p>
+</li></ul>
+
+<h2>Linux VM</h2>
+Do either the Ubuntu steps or the Fedora steps, as appropriate.
+
+<h3>Ubuntu</h3>
+In these steps, replace the value <strong class="em">"x"</strong> with the last part of your physical host's IP address.
+<ul><li>
+    Start your Ubuntu VM.
+    Login, using account "user" and password "user".
+</li><li>
+    Click on the Start button in the lower left corner.
+    <p>
+    Choose "Service Settings" (the Gears icon), then choose "Network Connections".
+    </p>
+</li><li>
+    Choose "Manual wired connection", then click on "Edit"
+</li><li>
+    Choose the "IPv4 Settings" tab.
+</li><li>
+    Set the Method to "Manual".
+</li><li>
+    Click on the "Add" button on the right.
+    <p>
+    Enter <code>192.168.<strong class="em">x</strong>.3</code> under the Address label.
+    </p><p>
+    Enter <code>24</code> under the Netmask label.
+    </p><p>
+    Enter <code>192.168.<strong class="em">x</strong>.1</code> under the Gateway label.
+    </p>
+</li><li>
+    Enter <code>192.168.<strong class="em">x</strong>.1</code> in the "DNS servers:" box.
+</li><li>
+    Click on the "Save..." button, then the "Close" button in the Network Connections window.
+</li></ul>
+
+<h3>Fedora</h3>
+In these steps, replace the value <strong class="em">"x"</strong> with the last part of your physical host's IP address.
+<ul><li>
+    Start your Fedora VM.
+    Login, using account "user" and password "user".
+</li><li>
+    Click on "Activities" in the upper left.
+    Then choose the Applications icon at the bottom.
+    <p>
+    Choose "Settings".
+    </p>
+</li><li>
+    Choose "Network".
+    <p>
+    Click on the "Settings" icon in the lower right corner.
+    </p>
+</li><li>
+    Choose the "IPv4" item on the left.
+    <p>
+    On the right, set IPv4 to "ON", set Addresses to "Manual".
+    </p>
+</li><li>
+    Fill in "Address" as <code>192.168.<strong class="em">x</strong>.3</code>.
+    <p>
+    Fill in the "Netmask" as <code>24</code>.
+    </p><p>
+    Fill in the "Gateway" as <code>192.168.<strong class="em">x</strong>.1</code>.
+    </p>
+</li><li>
+    Fill in the DNS "Server" box as <code>192.168.<strong class="em">x</strong>.1</code>.
+</li><li>
+    Click on "Apply", then close the Network window.
+</li></ul>
+</div><!-- GUI -->
+
+<h2>Test your LAN</h2>
+<ul><li>
+    Restart both of your VMs.
+</li><li>
+    In Windows, run the command <code>ipconfig</code> from a command prompt and verify the VM's IP address.
+</li><li>
+    In Linux, run the command <code>ifconfig</code> (or the command <code>ip addr</code>) from a terminal and verify this VM's IP address.
+</li><li>
+    In Linux, start Wireshark.
+    Use <tt>icmp</tt> as a display filter; once you do the following ping commands you should see ICMP frames show up.
+</li><li>
+  In your Windows VM, open a command shell and run the command <code>ping  192.168.<strong class="em">x</strong>.3</code> to ping your Linux VM.
+    <p>
+    Replace the value <strong class="em">"x"</strong> with the last part of your physical host's IP address.
+    </p>
+</li><li>
+  In your Linux VM, open a command shell and run the command <code>ping  -c 3  192.168.<strong class="em">x</strong>.2</code> to ping your Windows VM.
+    <p>
+    Replace the value <strong class="em">"x"</strong> with the last part of your physical host's IP address.
+    </p>
+</li><li>
+    You should see the ping traffic in Wireshark.
+</li></ul>
+
+<h3>
+Congratulations!  You've reconfigured your VMs as a private (virtual) LAN.
+</h3>
+Shut down both VMs.
+
+<hr/>
+
+</div><!-- content -->
+<script type="text/javascript">ts_validate();</script>
+</body></html>

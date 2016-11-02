@@ -1,0 +1,443 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Networking Worksheet</title>
+<meta name="author" content="RAMontante"/>
+<meta name="date" content="2016-10-28"/>
+<style type="text/css">
+@import url("/css/generic.css");
+@import url("/css/pagefmt.css");
+@import url("/css/w3cvalid.css");
+
+body {
+    font-size:12pt;
+    width:8.5in;
+    margin:0;
+    padding:0.50in;
+}
+
+h3 { margin-bottom:1ex; margin-top:4ex;padding-top:0.5ex;border-top: 1px solid #ddd; }
+
+h4 { margin-bottom:1ex; }
+
+ol { margin-top:1ex; }
+ol li { margin-top:0ex; margin-bottom:1ex; padding:0;border-top:1px dotted #999;}
+
+.code,
+code {
+    padding-left:2px;padding-right:2px;margin-bottom:1.5ex;
+    color:#600;background:#e0e0e0;border:1px dotted #666;
+    font-size:110%;
+}
+div.code {width:25em;page-break-inside:avoid;}
+
+code img {background:#fff;color:#000}
+  
+pre {background:#e0e0e0}
+
+ul.compact {
+    list-style: inside square;
+}
+
+div#title {
+    float:left;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    border:1px solid red;
+}
+div#title p {
+    width: 3.45in;
+    margin: 0ex 0em 0ex 2em;
+    text-indent: -2em;
+    padding: 0;
+}
+
+div#SigBlock {
+    float:left;
+    width:3in;height:0.75in;
+    vertical-align:top;
+    border:1px solid #000;padding:1em;
+}
+
+.answerline {
+    display:inline-block;
+    width:1in;
+    border-bottom:1px solid #000;
+}
+
+</style>
+<script type="text/javascript" src="/js/utilities.js"></script>
+
+</head><body class="">
+
+<div id="content">
+<div id="title">
+  <p class="">Networking</p>
+  <p>VM-setup Worksheet</p>
+</div><!-- title -->
+<div id="SigBlock" class="HIDE"><span class="">Name:</span></div>
+<!-- ==================================================================== -->
+
+<h1>Setting up Virtual Machines</h1>
+In this worksheet you will set up two Virtual Machines, and check out communications between them and their Internet gateway using Wireshark.
+Each machine will have a simple user account, called "user" and with password "user" so that nobody forgets their account or password.
+
+<img class="floatright width300" src="VM-network.0b.svg" alt="two VMs" />
+<p>
+Some terminology:
+</p>
+<ul class="compact width400"><li>
+    The actual computer that you're using is called the <em>physical host</em>.
+</li><li>
+    It will run a program called a <em>virtual machine manager (VM manager)</em>; we will be using the VirtualBox VM manager.
+    The VM manager provides the Internet gateway.
+</li><li>
+    Within it, you will configure and run a number of <em>virtual machines</em>, each one running an operating system (such as Windows 7 or Linux).
+</li></ul>
+
+<h2>Set up and Start the VirtualBox VM Manager</h2>
+<ol><li>
+    Open a terminal on your physical host.
+</li><li>
+    Run the <code>ifconfig</code> command.
+    Note your IP (inet) address <span class="HIDE">and MAC (HWaddr or ether) address</span> for later reference.
+    It should look like <tt>148.137.141.</tt>??? where the "???" varies from host to host.
+    <div class="HIDE width400 height200 boxed"> </div>
+
+</li><li class="">
+    <p>
+    If you haven't already, use the <code>mountmadhome</code> command to mount your "M:" drive as the "MadHome" directory in your home directory.
+    You will need about 20GB free on your "MadHome" drive.
+    </p>
+</li><li>
+    Run the command <code>virtualbox</code> from the command line, or find the link from the start menu.
+</li><li>
+    Click on "File &rarr; Preferences &rarr; General".
+</li><li class="">
+    Set the Default Machine Folder to be a folder in MadHome.
+    You should create a folder to hold VMs (and other files) for this course.
+</li></ol>
+
+<hr/>
+
+<h2>Windows VM</h2>
+<!-- Takes about 40 minutes... -->
+<ol><li>
+    Click on "New" from the VM manager window.
+    Name this machine "<strong>Win7-<em class="fancyfont">&lt;number&gt;</em></strong>", where "<em class="fancyfont">&lt;number&gt;</em>" is the last number of your physical host's IP address (<em>e.g.</em> 106 or 118).
+    Set the "Type" and "Version" as Windows 7 (use 64-bit), and click on "Next &gt;".
+</li><li>
+    Leave the Memory at 1024 MB (1 GB), and click on "Next".
+    <p>
+    Check "Create a virtual hard drive now", and click on "Create".
+    </p><p>
+    Check "VDI (VirtualBox Disk Image)", and click on "Next".
+    </p><p>
+    Check "Dynamically allocated", and click on "Next".
+    </p><p>
+    Set the virtual hard drive size to about 12 GB, and click on "Create".
+    </p>
+</li><li>
+    Select your new VM in the VM manager, and click on "Start".
+    If you get the "Select start-up disk" dialog box, do the following:
+    <ul class="compact"><li>
+        Click on the folder-like icon ("browse").
+    </li><li>
+        Choose File System; double-click "/iso-files".
+    </li><li>
+        Double-click the "Win_Pro_7_64bit.iso" file.
+    </li><li>
+        Then click on "Start".
+    </li></ul>
+    <p>
+    If you DON'T get the "Select start-up disk" dialog box, power off the VM again and do the following:
+    </p>
+    <ul class="compact"><li>
+        Click on the "Settings" menu (looks like an orange gear).
+    </li><li>
+        Choose Storage on the left.
+    </li><li>
+        Click on the "Empty" item in the Storage tree on the right.
+    </li><li>
+        On the far right, click on the circular icon (bluish, looks kind of like a CD or DVD).
+    </li><li>
+        Click on "Choose virtual optical disk file..."
+    </li><li>
+        Browse to "Computer &rarrow; / &rarrow; /iso-files".
+    </li><li>
+        Double-click (or Open) the "Win_Pro_7_64bit.iso" file.
+    </li><li>
+        Click on OK.
+    </li><li>
+        Then click on "Start".
+    </li></ul>
+</li><li>
+    Let the installation run.
+    Accept the license agreements.
+    <em>Choose a <b>custom</b> installation.</em>
+</li><li>
+    Let Windows restart.
+    Create a user named "user", with password "user" (the machine name is acceptable).
+    The easiest password hint is to simply enter "user" again.
+    <p>
+    Select "Ask me later" for the security settings.
+    </p><p>
+    Select "Eastern Time" for the time and date settings.
+    </p>
+</li><li>
+    (<em>Important:</em>) Select "Work network" for the current location.
+</li><li>
+    When it's done, restart your new Windows VM.
+    Login to Windows, using account "user" and password "user".
+</li><li>
+    If the "current location" window opens again, select "Work network" again.
+</li><li>
+    Click on "Start -&gt; All Programs -&gt; Accessories".
+    <p>
+    Right-click on "Command Prompt" and choose "Run as Administrator".
+    </p><p>
+    Run the command <code>ipconfig</code>.  What is the IP address?
+    (How does it compare to your physical host's IP address?)
+    <!-- won't be in 148.137.141.0/25 ... -->
+    </p>
+</li><li>
+    Run the command <code>ping 4.2.2.2</code> to determine whether you're connected to the Internet.
+    (You should be.)
+    <br/>
+</li><li class="HIDE">
+    Open a web browser (Internet Explorer).
+    Browse to "filezilla-project.org".
+    Download and install the FTP server.
+    <br/>
+</li><li>
+    Click on the "Devices" menu (above the Windows screen).
+    <p>
+    Choose "Optical Drives".
+    </p><p>
+    Click on "Remove disk from virtual drive".
+    </p>
+</li></o.>
+
+<h3>Make your VM resize-able</h3>
+<ol><li>
+    Click on the "Devices" menu (above the Windows screen) again.
+    <p>
+    Choose "Guest Additions CD image".
+    </p>
+</li><li>
+    If the CD doesn't autostart, then...
+    <ol class="compact"><li>
+        Click the Windows Start button in the VM, and enter the command "computer".
+    </li><li>
+        Double-click the "CD drive (D:) VirtualBox Guest Additions".
+    </li></ol>
+</li><li>
+    Run the "VBoxWindowsAdditions.exe" application.
+    Accept the defaults.
+</li><li>
+    Restart Windows.
+    You should now be able to use "Menu -&gt; Control Panel -&gt; Display" to resize the window to be larger &mdash; try 1024x768 or 1280x1024.
+    <p>
+    Alternatively, you may be able to just drag and drop the corner of the window to resize it.
+    </p>
+</li></ol>
+
+<hr/>
+
+<h2>Linux VM</h2>
+<ol><li>
+    Click on "New" from the VM manager window.
+    Name this machine "Linux-&lt;number&gt;", where "&lt;number&gt;" is the last number of your IP address (<em>e.g.</em> 106 or 118).
+    Set the "Type" and "Version" appropriately (use 64-bit), and click on "Next &gt;".
+</li><li>
+    Leave the Memory at 1024 MB (1 GB), and click on "Next".
+    <p>
+    Check "Create a virtual hard drive now", and click on "Create".
+    </p><p>
+    Check "VDI (VirtualBox Disk Image)", and click on "Next".
+    </p><p>
+    Check "Dynamically allocated", and click on "Next".
+    </p><p>
+    Set the virtual hard drive size to about 8 GB, and click on "Create".
+    </p>
+</li><li>
+    Select your new VM in the VM manager, and click on "Start".
+    <p>
+    You should get the "Select start-up disk" dialog box.
+    Click on the folder-like icon ("browse").
+    Choose File System; double-click "iso-files".
+    <span class="HIDE">Double-click any one of the Linux .iso files. (If unsure, try Ubuntu.)</span>
+    Double-click the Linux Ubuntu .iso file.
+    Then click on "Start".
+    </p>
+</li><li>
+    Let the installation run.
+    Choose appropriate values.
+    <span class="HIDE">If the installation asks for a root password (Fedora installation), use "user".</span>
+</li><li>
+    Let Linux restart.
+    Create a user named "user", with password "user" (the machine name is acceptable).
+    <p>
+    Select "Eastern Time" for the time and date settings.
+    </p>
+</li><li>
+    When it's done, restart your new Linux VM.
+    Login, using account "user" and password "user".
+</li><li>
+    Find and run the terminal program (search for "term" from the Start menu).
+    <p>
+    </p><p>
+    Run the command <code>ifconfig</code>.  What is the IP address?
+    (Does it start out "148.137..." or with "10.0.2..."?)
+    <!-- won't be in 148.137.141.0/25 ... -->
+    </p>
+</li><li>
+    Run the command <code>ping  -c 3  4.2.2.2</code> to determine whether you're connected to the Internet.
+    (You should be.)
+</li></ol>
+
+<h3>Install Wireshark in Linux</h3>
+Wireshark is a packet-analysis application, also known as a "packet sniffer".
+Install Wireshark into your VM.
+
+<ul><li>
+    Run the command:
+<pre class="prompt2 boxed width350">
+sudo apt install wireshark
+</pre>
+</li><li class="HIDE">
+    If you instead installed Fedora, run the commands:
+<pre class="prompt2 boxed width350">
+su
+yum install wireshark
+yum install wireshark-gnome
+usermod -a -G wireshark user
+yum install ftp
+</pre>
+</li></ul>
+
+<h3>Set up the scapy package in Linux</h3>
+Scapy is a network-packet-manipulation package that runs under Python 2.5 or later.
+You will install scapy in your Linux VM, which should have Python installed by default.
+<ol><li>
+    Start your Linux VM.
+</li><li>
+    Open a terminal in Linux.
+</li><li>
+    Run the command <code>virtualbox</code> from the command line, or find the link from the start menu.
+</li></ol>
+<p>
+Scapy is available for python 2.x and for python 3.x, but you have to choose which language version you prefer.
+If you prefer python 2.x, use the first sequence below.
+If you prefer python 3.x instead, use the second sequence below.
+
+<blockquote>
+    <h4>Python 2.x</h4>
+    <ol><li>
+        Obtain the scapy package: run the command
+<pre class="code">
+ wget&nbsp;https://github.com/secdev/scapy/archive/v2.3.2.zip
+</pre>
+    </li><li class="">
+        Unpack and install the package.
+        Enter these commands, one at a time:
+<pre class="code">
+ unzip v2.3.2.zip
+
+ cd scapy-2.3.2/
+ sudo python setup.py install
+</pre>
+    </li></ol>
+    <p class="smaller">
+    (<em>note</em>: You should be able to install scapy on a  Windows machine running Python 2.5 or later, as well.)
+    </p>
+
+    <h4>Python 3.x</h4>
+    <ol><li>
+        Obtain the scapy package: run the command
+    <pre class="code">
+ wget&nbsp;https://github.com/phaethon/scapy/archive/master.zip
+    </pre>
+    </li><li class="">
+        Unpack and install the package.
+        Enter these commands, one at a time:
+<pre class="code">
+ unzip master.zip
+
+ cd scapy-master/
+ sudo python3 setup.py install
+</pre>
+    </li></ol>
+</blockquote>
+
+<h3>Make your VM resize-able</h3>
+<ol><li>
+    Click on the "Devices" menu (above the Windows screen).
+    <p>
+    Choose "Optical Drives".
+    </p><p>
+    Click on "Remove disk from virtual drive".
+    (If it's grayed out so you can't click on it, just skip to the next step.)
+    </p>
+</li><li>
+    Click on the "Devices" menu (above the Linux screen) again.
+    <p>
+    Choose "Guest Additions CD image".
+    </p>
+</li><li>
+    You should be prompted to run the executable on the Guest Additions CD.
+    Go ahead and do so.
+</li><li>
+    If you aren't prompted to run the Guest Additions CD, open a file manager (for example, Dolphin on Ubuntu), browse to the Guest Additions CD, and double-click the "autorun.sh" file.
+</li><li>
+    Restart Linux.
+    You should now be able to use "Settings &rarrow; Display" to resize the window to be larger &mdash; try 1024x768 or 1280x1024.
+    <p>
+    Alternatively, you may be able to just drag and drop the corner of the window to resize it.
+    </p>
+</li></ol>
+
+<hr/>
+
+<h2>VMs and Wireshark</h2>
+<ol><li>
+    If necessary, restart both of your VMs.
+</li><li>
+    In Windows, run the command <code>ipconfig</code> from a command prompt and verify an IP address for the VM.
+</li><li>
+    In Linux, run the command <code>ifconfig</code> (or the command <code>ip addr</code>) from a terminal and verify another IP address for this VM.
+</li><li>
+    In Linux, start Wireshark:
+    <ul class="compact"><li>
+        In Ubuntu, use a terminal to run the command <code>sudo wireshark</code>
+    </li><li class="HIDE">
+        In Fedora, find the "Wireshark" command in the Applications menu and run that.
+    </li></ul>
+</li><li>
+    Use a new terminal in your Linux VM to run the command <code>ping  -c 3  10.0.2.2</code> again.
+    You should see the ping traffic in Wireshark.
+</li><li>
+    Run the command <code>ping  -c 3  4.2.2.2</code> again.
+    You should see the ping traffic in Wireshark.
+</li><li>
+    From Windows, ping the address <tt>10.0.2.2</tt>.
+    Do you see the ping traffic in Wireshark?
+</li><li>
+    From Windows, ping the address <tt>4.2.2.2</tt>.
+    Do you see the ping traffic in Wireshark?
+</li><li>
+    Shut down Wireshark.
+</li></ol>
+
+<h3>
+Congratulations!  You've set up your VMs.
+</h3>
+Shut down both VMs.
+You're (finally) done for the day.
+
+</div><!-- content -->
+<script type="text/javascript">ts_validate();</script>
+</body></html>
