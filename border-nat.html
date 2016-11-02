@@ -1,0 +1,26 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+<span class="Remark fancyfont"># Set NAT on border router.</span>
+<span class="Remark fancyfont"># If necessary, change "10.141.0.1" to the upstream router.</span>
+<span class="Remark fancyfont"># Change "172.16.119" to the appropriate subnet.</span>
+<span class="Remark fancyfont"># 2016-10-22</span>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+
+<span class="Remark fancyfont"># Hide LAN hosts behind router's IP address</span>
+set nat source rule 100 outbound-interface 'eth0'
+set nat source rule 100 source address '10.0.141.0/8'
+set nat source rule 100 translation address masquerade
+
+set nat source rule 200 outbound-interface 'eth0'
+set nat source rule 200 source address '172.16.0.0/16'
+set nat source rule 200 translation address masquerade
+
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre></body></html>

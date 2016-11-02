@@ -1,0 +1,71 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+<span class="Remark fancyfont"># Set firewall on gateway router.</span>
+<span class="Remark fancyfont"># Two sets of rules: world-inbound-to-LAN,</span>
+<span class="Remark fancyfont"># and world-to-router.</span>
+<span class="Remark fancyfont"># No rules for packets outbound from LAN (let the fur fly).</span>
+<span class="Remark fancyfont"># 2016-10-22</span>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+
+set firewall name 'World-to-LAN' default-action 'drop'
+<span class="Remark fancyfont"># allow established and related packets,</span>
+<span class="Remark fancyfont"># but no inbound connection requests except pings</span>
+set firewall name 'World-to-LAN' rule 10 action 'accept'
+set firewall name 'World-to-LAN' rule 10 state established 'enable'
+set firewall name 'World-to-LAN' rule 10 state related 'enable'
+set firewall name 'World-to-LAN' rule 10 description 'Allow established and related'
+<span class="Remark fancyfont"># allow inbound pings to LAN:</span>
+set firewall name 'World-to-LAN' rule 20 action 'accept'
+set firewall name 'World-to-LAN' rule 20 icmp type-name 'echo-request'
+set firewall name 'World-to-LAN' rule 20 protocol 'icmp'
+set firewall name 'World-to-LAN' rule 20 state new 'enable'
+set firewall name 'World-to-LAN' rule 20 description 'Allow inbound pings'
+
+set firewall name 'World-to-Router' default-action 'drop'
+<span class="Remark fancyfont"># allow established and related packets</span>
+set firewall name 'World-to-Router' rule 10 action 'accept'
+set firewall name 'World-to-Router' rule 10 state established 'enable'
+set firewall name 'World-to-Router' rule 10 state related 'enable'
+set firewall name 'World-to-Router' rule 10 description 'Allow established and related'
+<span class="Remark fancyfont"># allow inbound pings to router:</span>
+set firewall name 'World-to-Router' rule 20 action 'accept'
+set firewall name 'World-to-Router' rule 20 icmp type-name 'echo-request'
+set firewall name 'World-to-Router' rule 20 protocol 'icmp'
+set firewall name 'World-to-Router' rule 20 state new 'enable'
+set firewall name 'World-to-LAN' rule 20 description 'Allow pings to router'
+
+
+<span class="Remark fancyfont"># These ssh rules actually control inbound sessions</span>
+<span class="Remark fancyfont"># to the gateway routers or to the LAN.</span>
+
+<span class="Remark fancyfont"># kill ssh attempts after 4 failed tries</span>
+set firewall name 'World-to-Router' rule 30 action 'drop'
+set firewall name 'World-to-Router' rule 30 destination port '22'
+set firewall name 'World-to-Router' rule 30 protocol 'tcp'
+set firewall name 'World-to-Router' rule 30 recent count '4'
+set firewall name 'World-to-Router' rule 30 recent time '60'
+set firewall name 'World-to-Router' rule 30 state new 'enable'
+<span class="Remark fancyfont"># allow ssh sessions to router</span>
+set firewall name 'World-to-Router' rule 40 action 'accept'
+set firewall name 'World-to-Router' rule 40 destination port '22'
+set firewall name 'World-to-Router' rule 40 protocol 'tcp'
+set firewall name 'World-to-Router' rule 40 state new 'enable'
+<span class="Remark fancyfont"># allow ssh sessions to LAN</span>
+set firewall name 'World-to-LAN' rule 40 action 'accept'
+set firewall name 'World-to-LAN' rule 40 destination port '22'
+set firewall name 'World-to-LAN' rule 40 protocol 'tcp'
+set firewall name 'World-to-LAN' rule 40 state new 'enable'
+
+
+<span class="Remark fancyfont"># bind firewall rulesets to an interface</span>
+set interfaces ethernet eth0 firewall in name 'World-to-LAN'
+set interfaces ethernet eth0 firewall local name 'World-to-Router'
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre></body></html>

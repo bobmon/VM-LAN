@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>VyOS DHCP config</title>
+<meta name="author" content="RAMontante"/>
+<meta name="date" content="2016-10-26"/>
+<base href="https://montcs.bloomu.edu" />
+<style type="text/css">
+@import url("/css/generic.css");
+.prompt,
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body class="" >
+<pre class="">
+<span class="Remark fancyfont">#-----------------------------------------------------------
+# Set dhcp server on private LAN's gateway router.
+# Fill in the correct values from the worksheet for items enclosed in <span class="fake">&thinsp;</span>.
+# 2016-10-26
+#-----------------------------------------------------------</span>
+
+set service dhcp-server disabled 'false'
+
+set service dhcp-server shared-network-name LAN authoritative 'enable'
+
+set service dhcp-server shared-network-name LAN subnet '<span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>'  default-router '<span class="fake">router's-IP-address</span>'
+set service dhcp-server shared-network-name LAN subnet '<span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>'  dns-server '<span class="fake">router's-IP-address</span>'
+set service dhcp-server shared-network-name LAN subnet '<span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>'  domain-name 'INSIDE'
+set service dhcp-server shared-network-name LAN subnet '<span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>'  lease '86400'
+
+set service dhcp-server shared-network-name LAN subnet '<span class="fake">subnet-ID</span><strong>/</strong><span class="fake">CIDR-bits</span>'  start '<span class="fake">first-client-address</span>'  stop '<span class="fake">last-client-address</span>'&nbsp;
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre>
+</body></html>

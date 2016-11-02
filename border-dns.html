@@ -1,0 +1,23 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+<span class="Remark fancyfont"># Set dns, NAT on border router.</span>
+<span class="Remark fancyfont"># If necessary, change "10.141.0.1" to the upstream router.</span>
+<span class="Remark fancyfont"># Change "172.16.119" to the appropriate subnet.</span>
+<span class="Remark fancyfont"># 2016-10-22</span>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+
+<span class="Remark fancyfont"># Name service forwarded to upstream router:</span>
+set service dns forwarding cache-size '0'
+set service dns forwarding listen-on 'eth1'
+set service dns forwarding name-server '148.137.11.15'
+set service dns forwarding name-server '192.168.1.1'
+
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre></body></html>

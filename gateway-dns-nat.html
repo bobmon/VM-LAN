@@ -1,0 +1,26 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------
+# Set dns, NAT on gate router.
+# If necessary, change "10.141.0.1" to the border router.
+# Change "172.16.119" to the appropriate subnet.
+# 2016-10-22
+#-----------------------------------------------------------
+
+# Name service forwarded to upstream router:</span>
+set service dns forwarding cache-size '0'
+set service dns forwarding listen-on 'eth0'
+set service dns forwarding name-server '10.141.0.1'
+
+<span class="Remark fancyfont"># Hide LAN hosts behind router's IP address</span>
+set nat source rule 100 outbound-interface 'eth1'
+set nat source rule 100 source address '172.16.119.0/24'
+set nat source rule 100 translation address masquerade
+
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>

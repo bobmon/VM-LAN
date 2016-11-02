@@ -1,0 +1,36 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+<span class="Remark fancyfont"># Configure RIPv2 on gateway router.</span>
+<span class="Remark fancyfont"># (If necessary, change "148.137.141.1" to an upstream router,</span>
+<span class="Remark fancyfont">#       such as the Hardware Lab's gateway router.)</span>
+<span class="Remark fancyfont"># Change "10.141.0.." to the router subnet.</span>
+<span class="Remark fancyfont"># Configure a couple of neighbors, .y and .z</span>
+<span class="Remark fancyfont"># 2016-10-22</span>
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+
+<span class="Remark fancyfont"># This appears to prevent duplicated ping responses?</span>
+set interfaces loopback lo address 1.1.1.x/32
+
+<span class="Remark fancyfont"># Set default route.</span>
+delete protocols static route 0.0.0.0/0
+set protocols static route 0.0.0.0/0 next-hop 148.137.141.1 distance '3'
+
+<span class="Remark fancyfont"># Configure RIP on connected networks</span>
+<span class="Remark fancyfont"># .y and .z are one number larger and smaller than the local subnet number.</span>
+set protocols rip redistribute connected
+set protocols rip network 10.141.0.0/16
+set protocols rip neighbor 10.141.0.y
+set protocols rip neighbor 10.141.0.z
+<span class="Remark fancyfont"># Shortcut route to the border router...</span>
+<span class="Remark fancyfont">#set protocols rip neighbor 10.141.0.1</span>
+
+show protocols
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre></body></html>
