@@ -1,0 +1,12 @@
+Worksheets to set up a virtual LAN.  Also needed: Linux and VyOS install images (freely available), MS-Windows 7 install image (not supplied, could be replaced by another Linux VM), Microsoft LLTD-for-Linux software (available as .zip file), other supporting files.
+
+Suggested order of usage:
+1) worksheet.LAN00.VirtualBox.html  ---  install and initial-configure two clients (1 Linux, 1 Win7)
+2) worksheet.LAN01.LLTD.html  ---  look at Microsoft's LLTD layer-2 protocol in action
+3) worksheet.LAN02.scapy.html  ---  try out hand-crafting of frames on the LAN
+4) worksheet.LAN04.private-LAN.html  ---  set static IP addresses
+5) worksheet.LAN08.VyOS.html  ---  add router as a 3rd VM
+6) worksheet.LAN11.dhcp.html  ---  configure DHCP on the LAN
+7) worksheet.LAN12.firewall.html  ---  configure a firewall (in preparation for rejoining the Internet)
+8) worksheet.LAN16.routing.html  ---  configure a "border" router that connects (via VirtualBox) to the campus network and the Internet
+9) worksheet.LAN06.servers.html  ---  examine webserver and ftp server traffice on the local subnet
