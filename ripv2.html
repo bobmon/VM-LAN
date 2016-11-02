@@ -1,0 +1,40 @@
+<html><head>
+<style type="text/css">
+@import url("/css/generic.css");
+pre {font-size:10pt;}
+.fancyfont {color:#00a;}
+</style>
+</head><body>
+<pre>
+<span class="Remark fancyfont">#-----------------------------------------------------------
+# Configure RIPv2 on gateway router.
+# Change "10.141.0.." to the router subnet.
+# Change "192.168.119.0" to your LAN's subnet.
+# Configure the border router as a neighbor;
+# optionally configure a couple of neighbors, .y and .z
+# 2016-10-22
+#-----------------------------------------------------------</span>
+
+<span class="Remark fancyfont"># This appears to prevent duplicated ping responses?</span>
+set interfaces loopback lo address 1.1.1.x/32
+
+<span class="Remark fancyfont"># Set default route.</span>
+delete protocols static route 0.0.0.0/0
+set protocols static route 0.0.0.0/0 next-hop 10.141.0.1 distance '6'
+
+<span class="Remark fancyfont"># Add a static route to 192.168.119.0/24:</span>
+delete protocols static route 192.168.119.0/24
+set protocols static route 192.168.119.0/24 next-hop 10.141.0.119 distance '4'
+
+<span class="Remark fancyfont"># Configure RIP on connected networks</span>
+<span class="Remark fancyfont"># .y and .z are one number larger and smaller than the local subnet number.</span>
+set protocols rip redistribute connected
+set protocols rip network 10.141.0.0/16
+<span class="Remark fancyfont">#set protocols rip neighbor 10.141.0.1</span>
+set protocols rip neighbor 10.141.0.y
+set protocols rip neighbor 10.141.0.z
+
+show protocols
+<span class="Remark fancyfont">#-----------------------------------------------------------</span>
+</pre>
+</body></html>
